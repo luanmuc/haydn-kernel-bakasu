@@ -19,9 +19,11 @@ env:
   CLANG_URL: "https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz"
 
   # ---- ccache 调优：命中率优先 ----
-  CCACHE_MAXSIZE: "2G"
+  CCACHE_MAXSIZE: "3G"
   CCACHE_COMPRESS: "true"
-  CCACHE_COMPRESSLEVEL: "3"
+  CCACHE_COMPRESSLEVEL: "1"
+  # depend mode：跳过重复预处理，命中判定更快（内核用 -Wp,-MD，兼容）
+  CCACHE_DEPEND: "true"
   # 内核里有 __DATE__/__TIME__、且每次 checkout 都是新 mtime；
   # 放开这几项 sloppiness，命中率才上得来（内容仍然参与哈希，不会算错）
   CCACHE_SLOPPINESS: "time_macros,include_file_mtime,include_file_ctime"
