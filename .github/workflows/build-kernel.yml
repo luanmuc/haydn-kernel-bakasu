@@ -152,6 +152,8 @@ jobs:
           grep -E "CONFIG_MACH_XIAOMI_HAYDN|CONFIG_LOCALVERSION=|CONFIG_KSU=|CONFIG_KSU_MULTI_MANAGER_SUPPORT|CONFIG_KSU_SUSFS=|CONFIG_KPM=|CONFIG_LTO_CLANG=|CONFIG_LTO_CLANG_THIN=|CONFIG_MODULES=" "out_${DEVICE}/.config" || true
           echo "=== 模块型驱动数量（应为 0，全部内置）==="
           grep -c "=m$" "out_${DEVICE}/.config" || echo 0
+          # .config 是隐藏文件，upload-artifact 默认不收；复制一份非隐藏名，随产物上传
+          cp "out_${DEVICE}/.config" "haydn-config-used.txt"
 
       - name: "10) 编译 Image（ccache 加速，仅 Image，不编 modules）"
         id: build
@@ -263,5 +265,6 @@ jobs:
           path: |
             out_haydn/arch/arm64/boot/Image
             out_haydn/.config
+            haydn-config-used.txt
             HoshinoNeko_*.zip
             build.log
