@@ -67,3 +67,11 @@
 - `maintenance/upstream-pins.json`：`audited_commit` 更新到 `57b2db607`，日巡从该基线看增量
 - 下一次例行月审：2026-12-24；若 rc4 先到，则提前
 - 跟进条件：新 tag / Release，或 SUSFS 5.4 分支出现新提交
+
+## 2026-11-24 日巡抽查（非月审）
+
+- BakaSU 最新 tag / Release 仍是 `v4.2.0-rc3`，没有 rc4
+- BakaSU `main` HEAD 仍是 `57b2db607`，与 `audited_commit` 一致，日巡 `delta=0`
+- SUSFS `kernel-5.4` 仍是 `76affd70`；`bash susfs/scripts/check-baseline.sh` 10/10 文件一致
+- MiYume `main` 仍是 `bcfa0c4b`
+- 结论：维持 hold，等 rc4 或 SUSFS 5.4 同步；没有触发 bump
