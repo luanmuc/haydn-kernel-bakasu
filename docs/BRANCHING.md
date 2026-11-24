@@ -16,7 +16,7 @@
    - defconfig 的**清理性改动**（如删除上游已不存在的幽灵开关）可以随通用修复进 `main`；功能开关的增删仍只在 `haydn/*`。
 2. `main` 上的 `.gitmodules` 保持上游写法（`ReSukiSU/ReSukiSU.git`，301 到 Baka-SU）；`haydn/*` 用 `Baka-SU/BakaSU.git`。
 3. `haydn/test` 验证通过后，用 **fast-forward** 合入 `haydn/stable`，再打 tag、发 Release。
-4. **tag 必须先建好并推送，才能跑 `build/ci/release.sh`**。脚本会校验 tag 存在且能解析到 commit；否则 GitHub 会拿 `main` 的 HEAD 建 tag，等于把旧内核发成新版本。
+4. **tag 必须先建好并推送，才能跑 `scripts/ci/release.sh`**。脚本会校验 tag 存在且能解析到 commit，并校验构建 run 的 `head_sha` 与 tag commit 一致；否则拒绝发布，避免把旧内核发成新版本。
 5. ccache 只在**编译成功**且体积 ≥20MB 时保存，失败轮不写缓存，避免残缺条目挤掉可用缓存。
 
 ## 发布与构建约定（P2 结论）
@@ -32,7 +32,19 @@
 haydn/test 提交 -> 触发云端构建 -> 校验版本号/hook/SUSFS/error
   -> git checkout haydn/stable && git merge --ff-only haydn/test
   -> git tag -a haydn-vN -m "..." <commit> && git push origin haydn-vN
-  -> bash build/ci/release.sh haydn-vN "标题" body.md
+  -> bash scripts/ci/release.sh haydn-vN "标题" body.md
+```
+
+`release.sh` 在工作区根执行时自动识别 `WORK_ROOT`（当前目录含 `PROGRESS.md` + `repo/`），也可显式指定：
+
+```bash
+WORK_ROOT=/path/to/workspace RUN_ID=123456789 bash scripts/ci/release.sh haydn-vN
+```
+
+建议先跑 `DRY_RUN=1` 校验 tag/run/产物，再正式发布：
+
+```bash
+DRY_RUN=1 RUN_ID=123456789 bash scripts/ci/release.sh haydn-vN
 ```
 
 ## 当前状态（2026-11-24）
@@ -40,4 +52,4 @@ haydn/test 提交 -> 触发云端构建 -> 校验版本号/hook/SUSFS/error
 - `haydn/stable`：KSU `v4.2.0-rc3`（版本码 35171）+ SUSFS `v2.3.0`
 - `haydn/test`：与 stable 同源，后续升级先动这里
 - `main`：上游基线 + 通用 CI，KSU 仍为 `v4.2.0-rc1`
-- 已发布：`haydn-v1`、`haydn-v2`
+- 已发布：`haydn-v1`、`haydn-v2`、`haydn-v3`

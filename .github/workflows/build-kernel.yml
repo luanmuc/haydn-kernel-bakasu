@@ -187,6 +187,20 @@ jobs:
           ls -lh "out_${DEVICE}/arch/arm64/boot/Image"
           file "out_${DEVICE}/arch/arm64/boot/Image"
 
+      - name: "10b) 日志分级（真实 error / 编译 warning / 已知噪音）"
+        if: always()
+        run: |
+          if [ -f build.log ]; then
+            python3 scripts/ci/classify-build-log.py build.log --summary | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            {
+              echo ""
+              echo "## 构建日志分级"
+              echo ""
+              echo "没有 build.log：失败发生在编译步骤之前，请看各步骤自身日志。"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
       - name: "11) ccache 命中统计"
         if: always()
         run: |
@@ -258,9 +272,9 @@ jobs:
             echo "## 编译失败诊断"
             echo ""
             if [ -f build.log ]; then
-              echo "### 错误行（前 60 条）"
+              echo "### 错误行（前 60 条，已排除已知噪音）"
               echo '```'
-              grep -n -E "error:|Error [0-9]+|undefined reference to|fatal error|Killed|No space left on device|ld: cannot|clang: error" build.log | head -60 || echo "(未匹配到常见错误关键字，请看下方日志尾部)"
+              python3 scripts/ci/classify-build-log.py build.log --errors --plain --max 60
               echo '```'
               echo ""
               echo "### 日志末尾 100 行"
