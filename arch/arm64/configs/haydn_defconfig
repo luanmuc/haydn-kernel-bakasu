@@ -944,7 +944,8 @@ CONFIG_IPC_LOG_MINIDUMP_BUFFERS=16
 CONFIG_BUG_ON_DATA_CORRUPTION=y
 CONFIG_KPROBES=y
 CONFIG_KSU=y
-# Nova scaffold: SUSFS is intentionally disabled until the 2.4.x port lands.
+# CONFIG_KSU_SUSFS is not set
+# Nova builtin root baseline: SUSFS stays disabled until its 2.4 port is wired.
 #Enale the clang build lto suppoerted(full/thin)
 CONFIG_LTO_CLANG=y
 CONFIG_LTO_CLANG_THIN=y

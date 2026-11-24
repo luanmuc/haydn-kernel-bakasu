@@ -432,6 +432,12 @@ long do_faccessat(int dfd, const char __user *filename, int mode, int flags)
 	unsigned int lookup_flags = LOOKUP_FOLLOW;
 	const struct cred *old_cred = NULL;
 
+#ifdef CONFIG_KSU
+	extern int ksu_handle_faccessat(int *dfd, const char __user **filename_user,
+					int *mode, int *__unused_flags);
+	ksu_handle_faccessat(&dfd, &filename, &mode, NULL);
+#endif
+
 	if (mode & ~S_IRWXO)
 		return -EINVAL;
 	if (flags & ~(AT_EACCESS | AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH))
