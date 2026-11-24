@@ -164,6 +164,13 @@ jobs:
           make -j"$(nproc)" ARCH=arm64 LLVM=1 LLVM_IAS=1 O="out_${DEVICE}" "${DEVICE}_defconfig"
           echo "=== 关键开关核对 ==="
           grep -E "CONFIG_MACH_XIAOMI_HAYDN|CONFIG_LOCALVERSION=|CONFIG_KSU=|CONFIG_KSU_MULTI_MANAGER_SUPPORT|CONFIG_KSU_SUSFS=|CONFIG_KPM=|CONFIG_LTO_CLANG=|CONFIG_LTO_CLANG_THIN=|CONFIG_MODULES=" "out_${DEVICE}/.config" || true
+          # Nova 的 KSU 依赖 KPROBES；这两个开关没生效时镜像里不会带 root，必须直接失败。
+          for sym in CONFIG_KPROBES CONFIG_KSU; do
+            if ! grep -q "^${sym}=y$" "out_${DEVICE}/.config"; then
+              echo "::error::${sym}=y 未生效（Nova 需要 CONFIG_KPROBES && CONFIG_EXT4_FS，检查 defconfig 依赖）"
+              exit 1
+            fi
+          done
           echo "=== 模块型驱动数量（应为 0，全部内置）==="
           grep -c "=m$" "out_${DEVICE}/.config" || echo 0
           # .config 是隐藏文件，upload-artifact 默认不收；复制一份非隐藏名，随产物上传
