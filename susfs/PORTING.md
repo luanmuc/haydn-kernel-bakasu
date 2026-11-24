@@ -42,7 +42,7 @@
    - `fs/susfs.o` 不应出现
    - 除 KSU 的 TP 检查外无其他 `error`
 4. 实测结果：上述文件在 SUSFS=n 下全部编译通过，`fs/susfs.o` 未编译，无其他 error → **guard 完整**
-5. 若确实要整 Image 成功，需同时 `CONFIG_KSU_MANUAL_HOOK=y`（未验证）或保持 `SUSFS=y`；正式发布始终 `SUSFS=y`
+5. 若确实要整 Image 成功，需同时 `CONFIG_KSU_MANUAL_HOOK=y`——**2026-11-24 已实测整 Image 通过**（run `45320336880`：SUSFS=n + MANUAL_HOOK=y，27m39s，版本码 35171，0 error，Image 46,193,152B）；或保持 `SUSFS=y`。正式发布始终 `SUSFS=y`
 
 验证完删除临时分支，不合入任何产品分支。
 
