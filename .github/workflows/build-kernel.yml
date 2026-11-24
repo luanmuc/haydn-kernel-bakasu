@@ -202,8 +202,8 @@ jobs:
           echo "size=$SIZE" >> "$GITHUB_OUTPUT"
           echo "ccache 体积: ${SIZE} MB"
 
-      - name: "13) 保存 ccache（体积 >= 20MB 才写；冷编实测约 200MB，300MB 门槛会让缓存永远存不下）"
-        if: always() && fromJSON(steps.ccache-size.outputs.size) >= 20
+      - name: "13) 保存 ccache（仅编译成功且体积 >= 20MB 才写；失败轮不污染最新缓存）"
+        if: success() && fromJSON(steps.ccache-size.outputs.size) >= 20
         continue-on-error: true
         uses: actions/cache/save@v4
         with:
