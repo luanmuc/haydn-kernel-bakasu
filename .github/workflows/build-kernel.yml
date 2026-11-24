@@ -16,6 +16,7 @@ concurrency:
 env:
   DEVICE: haydn
   CLANG_VERSION: "18.1.8"
+  AK3_COMMIT: "41f04bdb4ee30a44e429c2c1131d5e8bb32b15f1"
   CLANG_URL: "https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz"
 
   # ---- ccache 调优：命中率优先 ----
@@ -53,6 +54,19 @@ jobs:
           }
           ls -ld drivers/kernelsu
           echo "KSU 子模块 OK"
+
+      - name: "1b2) 补全 KSU 子模块历史（版本号=30700+提交数，浅克隆会算成 1）"
+        run: |
+          set -eu
+          if [ "$(git -C KernelSU rev-parse --is-shallow-repository)" = "true" ]; then
+            echo "子模块是浅克隆 -> 补全历史与 tag"
+            git -C KernelSU fetch --unshallow --tags origin
+          else
+            echo "子模块已是完整历史"
+          fi
+          git -C KernelSU fetch --tags origin || true
+          echo "KSU 提交数: $(git -C KernelSU rev-list --count HEAD)"
+          git -C KernelSU describe --tags --always
 
       - name: "1c) 环境快照（出问题时先看这里）"
         run: |
@@ -201,7 +215,10 @@ jobs:
         run: |
           set -eu
           TAG="$(git rev-parse --short HEAD)"
-          git clone --depth 1 https://github.com/osm0sis/AnyKernel3.git ak3
+          # AnyKernel3 锁 commit（不用 master，避免上游改动导致包结构突变）
+          curl -fL --retry 3 "https://github.com/osm0sis/AnyKernel3/archive/${AK3_COMMIT}.tar.gz" -o /tmp/ak3.tar.gz
+          mkdir -p ak3
+          tar -xzf /tmp/ak3.tar.gz -C ak3 --strip-components=1
           cp "out_${DEVICE}/arch/arm64/boot/Image" ak3/Image
           cp scripts/ci/anykernel.sh ak3/anykernel.sh
           cd ak3
