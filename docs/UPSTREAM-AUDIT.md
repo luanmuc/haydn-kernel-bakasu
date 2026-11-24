@@ -22,6 +22,11 @@
 - 无变化时只写 Step Summary，不建 Issue
 - `audited_commit` 是“上次月审确认过的上游 HEAD”，不是 tag pin；月审后更新它，日巡才会从新基线继续看增量
 
+## 前置条件
+
+- 仓库必须开启 GitHub Issues（Settings → Features → Issues）。关闭时，日巡在 `changed=true` 时会在 `actions/github-script` 步骤报 `Issues has been disabled in this repository.`，workflow 直接失败。
+- 2026-11-24 已做强制测试：临时分支把 `audited_commit` 改回 tag pin，run `45342820214` 创建 Issue #1 并自动创建 `upstream-watch` 标签；run `45342910659` 验证“已存在则更新”路径。测试 Issue 已评论并关闭（not_planned），临时分支已删除。
+
 ## 月审（人工，约 30 分钟）
 
 1. 打开 `upstream-watch` Issue（没有就手动跑一次 workflow）
