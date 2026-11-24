@@ -1,0 +1,34 @@
+{
+  "updated_at": "2026-11-24",
+  "baksu": {
+    "repo": "Baka-SU/BakaSU",
+    "branch": "main",
+    "pinned_ref": "v4.2.0-rc3",
+    "pinned_commit": "239e1e8871b8fcd51a6e5b3002e0ba522fdd99fb",
+    "version_code": 35171,
+    "daily": true,
+    "monthly": true,
+    "watch_paths": [
+      "kernel/"
+    ],
+    "local_path": "KernelSU",
+    "audited_commit": "57b2db6076f439cfd489f14576444e8f0f2f0a25",
+    "audited_at": "2026-11-24",
+    "audit_decision": "hold: 等 rc4；先等 SUSFS API 同步，不跟 main"
+  },
+  "susfs": {
+    "repo": "Zhanfg/susfs4ksu",
+    "branch": "kernel-5.4",
+    "pinned_commit": "76affd70abf61d77feb0a132f61365d6848505df",
+    "local_version": "v2.3.0",
+    "daily": false,
+    "monthly": true
+  },
+  "miyume": {
+    "repo": "MiYume0721/android_kernel_xiaomi_sm8350_miyume",
+    "branch": "main",
+    "pinned_commit": "bcfa0c4b89efc35284c2708b7e6f2319d4948709",
+    "daily": false,
+    "monthly": true
+  }
+}

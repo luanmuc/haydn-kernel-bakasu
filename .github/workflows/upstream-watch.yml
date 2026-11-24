@@ -1,0 +1,86 @@
+name: Upstream Watch · BakaSU
+
+# 每天北京时间 09:00 巡检一次；只报警，不编译、不 bump、不建分支。
+# GitHub 的 schedule 只在默认分支（main）生效。
+on:
+  schedule:
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: upstream-watch-baksu
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    name: "BakaSU kernel changes"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: "1) 检出仓库"
+        uses: actions/checkout@v4
+
+      - name: "2) 巡检 BakaSU"
+        id: watch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 scripts/ci/upstream-watch.py \
+            --report upstream-watch.md \
+            --json upstream-watch.json
+
+      - name: "3) 写 Step Summary"
+        if: always()
+        run: |
+          if [ -f upstream-watch.md ]; then
+            cat upstream-watch.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: "4) 创建或更新 Issue"
+        if: steps.watch.outputs.changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const title = '[upstream-watch] BakaSU 内核相关变更';
+            const body = fs.readFileSync('upstream-watch.md', 'utf8');
+
+            try {
+              await github.rest.issues.getLabel({ owner, repo, name: 'upstream-watch' });
+            } catch (e) {
+              if (e.status !== 404) throw e;
+              await github.rest.issues.createLabel({
+                owner, repo,
+                name: 'upstream-watch',
+                color: 'fbca04',
+                description: '上游巡检自动维护，月审后关闭'
+              });
+            }
+
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner, repo, state: 'open', per_page: 100
+            });
+            const existing = issues.find(i => i.title === title && !i.pull_request);
+
+            if (existing) {
+              if (existing.body === body) {
+                core.info(`Issue #${existing.number} 内容未变，跳过更新`);
+                return;
+              }
+              await github.rest.issues.update({
+                owner, repo, issue_number: existing.number, body
+              });
+              core.info(`已更新 Issue #${existing.number}`);
+            } else {
+              const created = await github.rest.issues.create({
+                owner, repo, title, body, labels: ['upstream-watch']
+              });
+              core.info(`已创建 Issue #${created.data.number}: ${created.data.html_url}`);
+            }
