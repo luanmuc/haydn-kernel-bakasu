@@ -1,0 +1,12 @@
+{
+  "variant": "bakasu",
+  "branch": "haydn/stable",
+  "ksu_repo": "Baka-SU/BakaSU",
+  "ksu_ref": "v4.2.0-rc3",
+  "ksu_commit": "239e1e8871b8fcd51a6e5b3002e0ba522fdd99fb",
+  "susfs_version": "v2.3.0",
+  "manager_pkg": null,
+  "kernel": "5.4.302",
+  "verified_at": "2026-11-24",
+  "status": "stable"
+}
