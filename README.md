@@ -43,6 +43,8 @@ Redmi K40 Pro / K40 Pro+（`haydn` / `haydnpro`，SM8350）的 **BakaSU 稳定�
 | 日志 | 对应构建 run 的 `build.log` / CI step summary |
 | SHA256SUMS | 覆盖以上所有资产的校验和文件 |
 
+完整要求和 clean boot 校验见 [`docs/RELEASE-STANDARD.md`](docs/RELEASE-STANDARD.md)。
+
 > 旧 `haydn-v1` / `haydn-v2` / `haydn-v3` 已从发布页和 tag 中移除；下一次正式版必须按上述完整资产规范发布。
 
 刷机前请保留原厂 boot，并确认设备是 `haydn` / `haydnpro`，不要刷到 K40（`alioth`）。
@@ -94,11 +96,12 @@ bash build_device.sh haydn
 - 构建 run 为 `completed + success`；
 - run 的 `head_sha` 等于 tag commit；
 - AK3 文件名包含该 commit 的 9 位短 SHA；
+- AnyKernel 使用大写 `BLOCK` / `IS_SLOT_DEVICE` 变量，并显式解析当前槽位；
 - Release 已存在时拒绝覆盖。
 
 发布说明模板见 [`docs/RELEASE-TEMPLATE.md`](docs/RELEASE-TEMPLATE.md)。
 
-> 注意：当前 `release.sh` 仍只上传 AK3；正式版资产规范里的 clean boot、上游 APK、Image、日志和 `SHA256SUMS` 还需要在发布流程中补齐。
+> `release.sh` 已支持 `RELEASE_ASSETS_DIR`，会先上传 AK3，再调用 `scripts/ci/upload-release-assets.sh` 上传其余资产。clean boot 仍是人工配方；BakaSU 上游 APK 来源尚未确认，正式发版前必须解决。
 
 ## 维护约定
 
@@ -111,6 +114,8 @@ bash build_device.sh haydn
 
 - [分支模型](docs/BRANCHING.md)
 - [BakaSU 线说明](docs/KSU-LINE.md)
+- [正式版资产标准](docs/RELEASE-STANDARD.md)
+- [Nova 移植方案与审计](docs/NOVA-PORT.md)
 - [发布说明模板](docs/RELEASE-TEMPLATE.md)
 - [真机验证清单](docs/DEVICE-TEST.md)
 - [上游巡检与月审](docs/UPSTREAM-AUDIT.md)

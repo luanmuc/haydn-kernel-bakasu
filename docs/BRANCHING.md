@@ -28,10 +28,12 @@
 ## 发布流程
 
 ```text
-提交到 haydn/stable -> 触发云端构建 -> 校验版本号/hook/SUSFS/error
+提交到 haydn/stable -> 触发云端构建 -> 校验版本号/hook/SUSFS/FCM6/error
   -> git tag -a haydn-vN -m "..." <commit> && git push origin haydn-vN
-  -> bash scripts/ci/release.sh haydn-vN "标题" body.md
+  -> RELEASE_ASSETS_DIR=/path/to/assets bash scripts/ci/release.sh haydn-vN "标题" body.md
 ```
+
+`release.sh` 会先上传 AK3，再通过 `RELEASE_ASSETS_DIR` 上传 clean boot、APK、Image、日志、`SHA256SUMS` 等额外资产。clean boot 和 APK 的来源/校验按 [`RELEASE-STANDARD.md`](RELEASE-STANDARD.md) 执行；当前 APK 来源尚未确认，不能宣称资产齐全。
 
 `release.sh` 在工作区根执行时自动识别 `WORK_ROOT`（当前目录含 `PROGRESS.md` + `repo/`），也可显式指定：
 

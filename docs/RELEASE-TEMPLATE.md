@@ -25,3 +25,15 @@
 - 不刷 Nova 线包
 - 不与 `com.sukisu.nova` 管理器混装
 - 切换线前卸载旧管理器并重启
+- 不把不同 tag 的 AK3、clean boot、Image、APK 混用
+
+正式资产必须按 [`RELEASE-STANDARD.md`](RELEASE-STANDARD.md) 发齐：
+
+- AnyKernel3
+- clean boot
+- BakaSU 上游配套 APK（来源确认前不宣称资产齐全）
+- Image
+- config
+- build log
+- `RELEASE-<sha>.md`
+- `SHA256SUMS`
