@@ -38,8 +38,10 @@ Nova 参考线：`haydn/nova-builtin-new`（HEAD `d2a17032c`）
 已落地（仅本地提交）：
 
 - `ee9d855e2` `fix(ci): make AnyKernel3 TWRP-compatible for haydn`
+- `ea855ca1e` `fix(ci): anchor AnyKernel devicecheck guard`
 - `846876e55` `config(haydn): port Nova FCM6 and HWRNG fixes`
 - `720b7e3a3` `ci(release): support full BakaSU release assets`
+- `56d50944e` `docs: record Nova port plan and local status`
 
 尚未完成 / 尚未验证：
 
