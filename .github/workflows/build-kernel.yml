@@ -265,7 +265,7 @@ jobs:
           grep -qE '^IS_SLOT_DEVICE=0$' ak3/anykernel.sh || {
             echo "::error::AnyKernel 未设置 IS_SLOT_DEVICE=0（显式 BLOCK 路径已含槽位）"; exit 1;
           }
-          grep -qE '^do.devicecheck=1' ak3/anykernel.sh || {
+          grep -qE '^do.devicecheck=1$' ak3/anykernel.sh || {
             echo "::error::AnyKernel 未启用 do.devicecheck=1"; exit 1;
           }
           if grep -qE '^(is_slot_device|ramdisk_compression|patch_vbmeta_flag|no_magisk_check)=' ak3/anykernel.sh; then
