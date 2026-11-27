@@ -19,7 +19,7 @@ Redmi K40 Pro / K40 Pro+（`haydn` / `haydnpro`，SM8350）的 **BakaSU 稳定�
 | 工具链 | Clang / LLD `18.1.8` |
 | 适用系统 | Android 14 |
 
-最新发布是 **`haydn-v3`**（2026-11-24，tag 指向 `21091ea1f`）。当前仓库 HEAD 只比它多了文档、CI 和发布脚本改动，没有新的内核版本；刷机请以 Release 页面的产物为准。
+发布页目前已清空（旧 `haydn-v1` / `haydn-v2` / `haydn-v3` 及其 tag 已移除）。当前代码在 `haydn/stable`；下一次正式版将按下方的完整资产规范发布，刷机请只使用新 Release 的产物。
 
 ## 仓库定位
 
@@ -43,7 +43,7 @@ Redmi K40 Pro / K40 Pro+（`haydn` / `haydnpro`，SM8350）的 **BakaSU 稳定�
 | 日志 | 对应构建 run 的 `build.log` / CI step summary |
 | SHA256SUMS | 覆盖以上所有资产的校验和文件 |
 
-> 当前线上 `haydn-v3` 是历史发布，只上传了 AK3；后续正式版按上述规范补齐，不追溯旧 Release。
+> 旧 `haydn-v1` / `haydn-v2` / `haydn-v3` 已从发布页和 tag 中移除；下一次正式版必须按上述完整资产规范发布。
 
 刷机前请保留原厂 boot，并确认设备是 `haydn` / `haydnpro`，不要刷到 K40（`alioth`）。
 

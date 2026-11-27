@@ -49,4 +49,4 @@ DRY_RUN=1 RUN_ID=123456789 bash scripts/ci/release.sh haydn-vN
 
 - `haydn/stable`：KSU BakaSU `v4.2.0-rc3`（版本码 35171）+ SUSFS `v2.3.0`
 - 远端分支：仅 `haydn/stable`
-- 已发布：`haydn-v1`、`haydn-v2`、`haydn-v3`
+- 旧 Release：`haydn-v1` / `haydn-v2` / `haydn-v3` 已清空（含对应 tag）；等待下一次正式版
