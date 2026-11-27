@@ -1,25 +1,24 @@
-# 分支模型（本 fork 的维护约定）
+# 分支模型（单分支维护）
 
 本仓库是 `MiYume0721/android_kernel_xiaomi_sm8350_miyume` 的 fork，只服务 haydn（Redmi K40 Pro / K40 Pro+）。
 
-## 三条分支的分工
+自 2026-11-27 起，本仓库远端只保留一个分支：`haydn/stable`。原 `main` 和 `haydn/test` 已删除；上游只作为 `upstream` remote 的只读参考，不再在本仓库保留镜像分支。
+
+## 唯一分支
 
 | 分支 | 定位 | 允许的改动 |
 |---|---|---|
-| `main` | **上游镜像 + 通用 CI** | 同步 MiYume 上游；CI 基建（子模块 unshallow、AnyKernel3 锁 commit、ccache）可以存在；**不做 KSU/SUSFS/defconfig 升级** |
-| `haydn/stable` | 长期稳定产品线 | 只接收在 `haydn/test` 验证过的改动；每次发布从这里打 tag |
-| `haydn/test` | 先行验证线 | KSU/SUSFS/defconfig 升级、实验性补丁先落这里，云端构建通过后再合入 stable |
+| `haydn/stable` | 长期稳定产品线 | KSU/SUSFS/defconfig 升级、修复和发布都落在这里；每次发布从当前 HEAD 打 tag |
 
 ## 硬规则
 
-1. **KSU 子模块 bump 只允许出现在 `haydn/*`**，`main` 保持上游当前指针（现为 rc1）。这样以后 rebase MiYume 上游时，main 不会因为子模块冲突而卡住。
-   - defconfig 的**清理性改动**（如删除上游已不存在的幽灵开关）可以随通用修复进 `main`；功能开关的增删仍只在 `haydn/*`。
-2. `main` 上的 `.gitmodules` 保持上游写法（`ReSukiSU/ReSukiSU.git`，301 到 Baka-SU）；`haydn/*` 用 `Baka-SU/BakaSU.git`。
-3. `haydn/test` 验证通过后，用 **fast-forward** 合入 `haydn/stable`，再打 tag、发 Release。
+1. **远端只保留 `haydn/stable`**。不要重新推 `main` 或 `haydn/test`；需要试验时用本地临时分支或独立 fork，不要在产品仓库建长期试验分支。
+2. **KSU 子模块始终指向 BakaSU**。`.gitmodules` 必须保持 `Baka-SU/BakaSU.git`，不要改成上游的 `ReSukiSU/ReSukiSU.git` 指针；`main` 分支曾经保留的 ReSukiSU 子模块指针不适用于本产品线。
+3. **任何 KSU/SUSFS/defconfig 改动**都必须先在本地临时分支或独立 fork 里完成整 Image 构建，核对版本码、hook 选路、SUSFS 版本和 `.config`，通过后再提交到 `haydn/stable`。
 4. **tag 必须先建好并推送，才能跑 `scripts/ci/release.sh`**。脚本会校验 tag 存在且能解析到 commit，并校验构建 run 的 `head_sha` 与 tag commit 一致；否则拒绝发布，避免把旧内核发成新版本。
 5. ccache 只在**编译成功**且体积 ≥20MB 时保存，失败轮不写缓存，避免残缺条目挤掉可用缓存。
 
-## 发布与构建约定（P2 结论）
+## 发布与构建约定
 
 - **tag 不重打**：`haydn-v2` 指向 `92c620be4`，之后的纯 CI 提交（如 ccache 门槛修复）不进 tag；tag 只标源码与产物。
 - **产物只含 `Image`**，dtb/dtbo 沿用 ROM 原机；要做 dtbo 定制需另立工程，不在本仓库内混。
@@ -28,9 +27,8 @@
 
 ## 发布流程
 
-```
-haydn/test 提交 -> 触发云端构建 -> 校验版本号/hook/SUSFS/error
-  -> git checkout haydn/stable && git merge --ff-only haydn/test
+```text
+提交到 haydn/stable -> 触发云端构建 -> 校验版本号/hook/SUSFS/error
   -> git tag -a haydn-vN -m "..." <commit> && git push origin haydn-vN
   -> bash scripts/ci/release.sh haydn-vN "标题" body.md
 ```
@@ -47,9 +45,8 @@ WORK_ROOT=/path/to/workspace RUN_ID=123456789 bash scripts/ci/release.sh haydn-v
 DRY_RUN=1 RUN_ID=123456789 bash scripts/ci/release.sh haydn-vN
 ```
 
-## 当前状态（2026-11-24）
+## 当前状态（2026-11-27）
 
-- `haydn/stable`：KSU `v4.2.0-rc3`（版本码 35171）+ SUSFS `v2.3.0`
-- `haydn/test`：与 stable 同源，后续升级先动这里
-- `main`：上游基线 + 通用 CI，KSU 仍为 `v4.2.0-rc1`
+- `haydn/stable`：KSU BakaSU `v4.2.0-rc3`（版本码 35171）+ SUSFS `v2.3.0`
+- 远端分支：仅 `haydn/stable`
 - 已发布：`haydn-v1`、`haydn-v2`、`haydn-v3`

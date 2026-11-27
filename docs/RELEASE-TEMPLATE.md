@@ -13,7 +13,7 @@
 - SUSFS：`v2.3.0`
 - 管理器：BakaSU 管理器（包名：`<package>`）
 - 内核：`5.4.302-HoshinoNeko-bakasu-...`
-- 仓库：<https://github.com/luanmuc/android_kernel_xiaomi_sm8350_miyume>
+- 仓库：<https://github.com/luanmuc/haydn-kernel-bakasu>
 - 分支：`haydn/stable`
 - 提交：`<commit>`
 - 构建 run：`<run url>`

@@ -1,6 +1,6 @@
 # BakaSU 线说明
 
-- 仓库：`luanmuc/android_kernel_xiaomi_sm8350_miyume`
+- 仓库：`luanmuc/haydn-kernel-bakasu`
 - 分支：`haydn/stable`
 - KSU：BakaSU `v4.2.0-rc3`（`239e1e88`）
 - 管理器：BakaSU 管理器

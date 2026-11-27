@@ -1,4 +1,4 @@
-# android_kernel_xiaomi_sm8350_miyume
+# haydn-kernel-bakasu
 
 > **本仓库只维护 BakaSU 稳定线（`haydn/stable`）。**
 >

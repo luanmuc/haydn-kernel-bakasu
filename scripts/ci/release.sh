@@ -20,7 +20,7 @@ set -euo pipefail
 umask 077
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-REPO="${REPO:-luanmuc/android_kernel_xiaomi_sm8350_miyume}"
+REPO="${REPO:-luanmuc/haydn-kernel-bakasu}"
 
 usage() {
   sed -n '2,18p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
