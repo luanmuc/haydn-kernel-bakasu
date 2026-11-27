@@ -3,7 +3,7 @@
 > 历史记录：`haydn-v3` 的 Release 和 tag 已于 2026-11-27 清空，下文下载链接已失效；本清单只保留当时的验证过程与校验值。
 
 适用：Redmi K40 Pro / K40 Pro+（codename `haydn`，SM8350，boot image v3）
-不适用：K40（`alioth`）等其它机型。AnyKernel3 脚本里 `do.devicecheck=0`，不会替我们拦机型，刷错会直接变砖。
+不适用：K40（`alioth`）等其它机型。当前 AnyKernel3 模板已改为 `do.devicecheck=1`，会拦非 haydn 机型；本文记录的是历史 `haydn-v3`，当时模板仍为 `do.devicecheck=0`，不能据此认为现在不拦机型。
 
 ## 0. 结论口径
 
